@@ -1,5 +1,5 @@
 {
-    "name": "ulid/ulid",
+    "name": "rvdv/ulid",
     "description": "Universally Unique Lexicographically Sortable Identifier (ULID) implementation for PHP.",
     "type": "library",
     "license": "MIT",
@@ -9,7 +9,7 @@
             "email": "robin@webstronauts.co"
         }
     ],
-    "homepage" : "https://github.com/webstronauts/ulid",
+    "homepage" : "https://github.com/robinvdvleuten/php-ulid",
     "autoload": {
         "psr-4": {
             "Ulid\\": "src"
