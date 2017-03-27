@@ -1,5 +1,5 @@
 {
-    "name": "rvdv/ulid",
+    "name": "robinvdvleuten/ulid",
     "description": "Universally Unique Lexicographically Sortable Identifier (ULID) implementation for PHP.",
     "type": "library",
     "license": "MIT",
