@@ -2,7 +2,7 @@
 
 A PHP port of [alizain/ulid](https://github.com/alizain/ulid) with some minor improvements.
 
-[![Latest Stable Version](https://poser.pugx.org/rvdv/ulid/v/stable)](https://packagist.org/packages/rvdv/ulid)
+[![Latest Stable Version](https://poser.pugx.org/robinvdvleuten/ulid/v/stable)](https://packagist.org/packages/robinvdvleuten/ulid)
 [![Build Status](https://travis-ci.org/robinvdvleuten/php-ulid.svg?branch=master)](https://travis-ci.org/robinvdvleuten/php-ulid)
 
 ## Installation
