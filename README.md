@@ -10,7 +10,7 @@ A PHP port of [alizain/ulid](https://github.com/alizain/ulid) with some minor im
 The recommended way to install the library is through [Composer](http://getcomposer.org).
 
 ```bash
-composer require rvdv/ulid
+composer require robinvdvleuten/ulid
 ```
 
 ## Quick Example
@@ -25,5 +25,3 @@ print $ulid; // 01b8kyr6g8bc61ce8r6k2t16hy
 ## License
 
 MIT © [Robin van der Vleuten](https://www.robinvdvleuten.nl)
-
-// https://github.com/PUGX/shortid-doctrine
