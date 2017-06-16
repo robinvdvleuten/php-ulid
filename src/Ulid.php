@@ -53,7 +53,7 @@ class Ulid
      */
     public static function generate()
     {
-        $now = (int) microtime(true) * 1000;
+        $now = intval(microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
 
         $timeChars = '';
