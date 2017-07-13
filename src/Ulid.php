@@ -51,6 +51,14 @@ class Ulid
     /**
      * @return Ulid
      */
+    public static function fromString($value)
+    {
+        return new Ulid(substr($value, 0, 10), substr($value, 10));
+    }
+
+    /**
+     * @return Ulid
+     */
     public static function generate()
     {
         $now = intval(microtime(true) * 1000);

@@ -33,4 +33,9 @@ class UlidTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame([(string) $a, (string) $b], $ulids);
     }
+
+    public function testCreatesFromString()
+    {
+        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3'));
+    }
 }
