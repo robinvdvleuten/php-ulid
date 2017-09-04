@@ -15,6 +15,7 @@ class Ulid
 {
     // Crockford's Base32, all lowercased cause it's prettier in URLs.
     const ENCODING_CHARS = '0123456789abcdefghjkmnpqrstvwxyz';
+    const ENCODING_LENGTH = 32;
 
     /**
      * @var int
@@ -68,8 +69,9 @@ class Ulid
         $randChars = '';
 
         for ($i = 9; $i >= 0; $i--) {
-            $timeChars = static::ENCODING_CHARS[$now % 32].$timeChars;
-            $now = (int) floor($now  / 32);
+            $mod = $now % static::ENCODING_LENGTH;
+            $timeChars = static::ENCODING_CHARS[$mod].$timeChars;
+            $now = ($now - $mod) / static::ENCODING_LENGTH;
         }
 
         if (!$duplicateTime) {
