@@ -68,9 +68,11 @@ class Ulid
         $timeChars = '';
         $randChars = '';
 
+        $encodingChars = static::ENCODING_CHARS;
+
         for ($i = 9; $i >= 0; $i--) {
             $mod = $now % static::ENCODING_LENGTH;
-            $timeChars = static::ENCODING_CHARS[$mod].$timeChars;
+            $timeChars = $encodingChars[$mod].$timeChars;
             $now = ($now - $mod) / static::ENCODING_LENGTH;
         }
 
@@ -89,7 +91,7 @@ class Ulid
         }
 
         for ($i = 0; $i < 16; $i++) {
-            $randChars .= static::ENCODING_CHARS[static::$lastRandChars[$i]];
+            $randChars .= $encodingChars[static::$lastRandChars[$i]];
         }
 
         return new static($timeChars, $randChars);
