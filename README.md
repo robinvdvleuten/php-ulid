@@ -19,6 +19,10 @@ composer require robinvdvleuten/ulid
 use Ulid\Ulid;
 
 $ulid = Ulid::generate();
+print $ulid; // 01B8KYR6G8BC61CE8R6K2T16HY
+
+// Or if you prefer a lowercased output
+$ulid = Ulid::generate(true);
 print $ulid; // 01b8kyr6g8bc61ce8r6k2t16hy
 ```
 
