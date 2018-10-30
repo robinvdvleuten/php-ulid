@@ -15,6 +15,16 @@ use Ulid\Ulid;
 
 class UlidTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGeneratesUppercaseIdentiferByDefault()
+    {
+        $this->assertRegExp('/[0-9][A-Z]/', (string) Ulid::generate());
+    }
+
+    public function testGeneratesLowercaseIdentiferWhenConfigured()
+    {
+        $this->assertRegExp('/[0-9][a-z]/', (string) Ulid::generate(true));
+    }
+
     public function testGeneratesTwentySixChars()
     {
         $this->assertSame(26, strlen(Ulid::generate()));
@@ -36,6 +46,6 @@ class UlidTest extends \PHPUnit_Framework_TestCase
 
     public function testCreatesFromString()
     {
-        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3'));
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3'));
     }
 }

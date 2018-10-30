@@ -13,8 +13,7 @@ namespace Ulid;
 
 class Ulid
 {
-    // Crockford's Base32, all lowercased cause it's prettier in URLs.
-    const ENCODING_CHARS = '0123456789abcdefghjkmnpqrstvwxyz';
+    const ENCODING_CHARS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
     const ENCODING_LENGTH = 32;
 
     /**
@@ -38,29 +37,41 @@ class Ulid
     private $randomness;
 
     /**
+     * @var bool
+     */
+    private $lowercase;
+
+    /**
      * Constructor.
      *
      * @param string $time
      * @param string $randomness
+     * @param bool $lowercase
      */
-    private function __construct($time, $randomness)
+    private function __construct($time, $randomness, $lowercase = false)
     {
         $this->time = $time;
         $this->randomness = $randomness;
+        $this->lowercase = $lowercase;
     }
 
     /**
+     * @param string $value
+     * @param bool $lowercase
+     *
      * @return Ulid
      */
-    public static function fromString($value)
+    public static function fromString($value, $lowercase = false)
     {
-        return new Ulid(substr($value, 0, 10), substr($value, 10));
+        return new static(substr($value, 0, 10), substr($value, 10), $lowercase);
     }
 
     /**
+     * @param bool $lowercase
+     *
      * @return Ulid
      */
-    public static function generate()
+    public static function generate($lowercase = false)
     {
         $now = intval(microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
@@ -94,7 +105,7 @@ class Ulid
             $randChars .= $encodingChars[static::$lastRandChars[$i]];
         }
 
-        return new static($timeChars, $randChars);
+        return new static($timeChars, $randChars, $lowercase);
     }
 
     /**
@@ -102,6 +113,6 @@ class Ulid
      */
     public function __toString()
     {
-        return $this->time . $this->randomness;
+        return ($value = $this->time . $this->randomness) && $this->lowercase ? strtolower($value) : strtoupper($value);
     }
 }
