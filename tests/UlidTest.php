@@ -11,9 +11,10 @@
 
 namespace Ulid\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Ulid\Ulid;
 
-class UlidTest extends \PHPUnit_Framework_TestCase
+class UlidTest extends TestCase
 {
     public function testGeneratesUppercaseIdentiferByDefault()
     {
