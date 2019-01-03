@@ -13,8 +13,8 @@ namespace Ulid;
 
 class Ulid
 {
-    const ENCODING_CHARS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-    const ENCODING_LENGTH = 32;
+    public const ENCODING_CHARS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+    public const ENCODING_LENGTH = 32;
 
     /**
      * @var int
@@ -41,39 +41,21 @@ class Ulid
      */
     private $lowercase;
 
-    /**
-     * Constructor.
-     *
-     * @param string $time
-     * @param string $randomness
-     * @param bool $lowercase
-     */
-    private function __construct($time, $randomness, $lowercase = false)
+    private function __construct(string $time, string $randomness, bool $lowercase = false)
     {
         $this->time = $time;
         $this->randomness = $randomness;
         $this->lowercase = $lowercase;
     }
 
-    /**
-     * @param string $value
-     * @param bool $lowercase
-     *
-     * @return Ulid
-     */
-    public static function fromString($value, $lowercase = false)
+    public static function fromString(string $value, bool $lowercase = false): self
     {
-        return new static(substr($value, 0, 10), substr($value, 10), $lowercase);
+        return new static(\substr($value, 0, 10), \substr($value, 10), $lowercase);
     }
 
-    /**
-     * @param bool $lowercase
-     *
-     * @return Ulid
-     */
-    public static function generate($lowercase = false)
+    public static function generate(bool $lowercase = false): self
     {
-        $now = intval(microtime(true) * 1000);
+        $now = \intval(\microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
 
         $timeChars = '';
@@ -89,7 +71,7 @@ class Ulid
 
         if (!$duplicateTime) {
             for ($i = 0; $i < 16; $i++) {
-                static::$lastRandChars[$i] = random_int(0, 31);
+                static::$lastRandChars[$i] = \random_int(0, 31);
             }
         } else {
             // If the timestamp hasn't changed since last push,
@@ -108,11 +90,8 @@ class Ulid
         return new static($timeChars, $randChars, $lowercase);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
-        return ($value = $this->time . $this->randomness) && $this->lowercase ? strtolower($value) : strtoupper($value);
+        return ($value = $this->time . $this->randomness) && $this->lowercase ? \strtolower($value) : \strtoupper($value);
     }
 }
