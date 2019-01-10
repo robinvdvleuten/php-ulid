@@ -16,6 +16,8 @@ use Ulid\Ulid;
 
 final class UlidTest extends TestCase
 {
+    const FAKE_MICROTIME = 1547129631.2074;
+
     public function testGeneratesUppercaseIdentiferByDefault(): void
     {
         $this->assertRegExp('/[0-9][A-Z]/', (string) Ulid::generate());
@@ -48,5 +50,13 @@ final class UlidTest extends TestCase
     public function testCreatesFromString(): void
     {
         $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3'));
+    }
+
+    public function testGeneratesDifferentIdentifiersIfCalledInSameMillisecond(): void
+    {
+        ClockMock::register('Ulid\Ulid');
+        ClockMock::withClockMock(static::FAKE_MICROTIME);
+
+        $this->assertNotEquals(Ulid::generate(), Ulid::generate());
     }
 }
