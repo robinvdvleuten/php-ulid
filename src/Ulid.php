@@ -57,6 +57,7 @@ class Ulid
     {
         $now = \intval(\microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
+        static::$lastGenTime = $now;
 
         $timeChars = '';
         $randChars = '';
