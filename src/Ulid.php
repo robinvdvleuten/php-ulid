@@ -55,7 +55,7 @@ class Ulid
 
     public static function generate(bool $lowercase = false): self
     {
-        $now = \intval(\microtime(true) * 1000);
+        $now = \intval(microtime(true) * 1000); // do not use \microtime() here to enable clock mocking in tests
         $duplicateTime = $now === static::$lastGenTime;
         static::$lastGenTime = $now;
 
