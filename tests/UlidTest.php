@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ULID package.
  *
@@ -28,7 +30,7 @@ final class UlidTest extends TestCase
 
     public function testGeneratesTwentySixChars(): void
     {
-        $this->assertSame(26, \strlen(Ulid::generate()));
+        $this->assertSame(26, \strlen((string) Ulid::generate()));
     }
 
     public function testGeneratesLexographicallySortableUlids(): void

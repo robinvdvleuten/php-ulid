@@ -26,11 +26,15 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",
-        "phpbench/phpbench": "^0.15"
+        "phpbench/phpbench": "^0.15",
+        "friendsofphp/php-cs-fixer": "^2.2"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

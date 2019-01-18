@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ULID package.
  *
@@ -55,7 +57,7 @@ class Ulid
 
     public static function generate(bool $lowercase = false): self
     {
-        $now = \intval(\microtime(true) * 1000);
+        $now = \intval(microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
 
         $timeChars = '';
@@ -63,27 +65,25 @@ class Ulid
 
         $encodingChars = static::ENCODING_CHARS;
 
-        for ($i = 9; $i >= 0; $i--) {
+        for ($i = 9; $i >= 0; --$i) {
             $mod = $now % static::ENCODING_LENGTH;
             $timeChars = $encodingChars[$mod].$timeChars;
             $now = ($now - $mod) / static::ENCODING_LENGTH;
         }
 
         if (!$duplicateTime) {
-            for ($i = 0; $i < 16; $i++) {
+            for ($i = 0; $i < 16; ++$i) {
                 static::$lastRandChars[$i] = \random_int(0, 31);
             }
         } else {
-            // If the timestamp hasn't changed since last push,
-            // use the same random number, except incremented by 1.
-            for ($i = 15; $i >= 0 && static::$lastRandChars[$i] === 31; $i--) {
+            for ($i = 15; $i >= 0 && 31 === static::$lastRandChars[$i]; --$i) {
                 static::$lastRandChars[$i] = 0;
             }
 
-            static::$lastRandChars[$i]++;
+            ++static::$lastRandChars[$i];
         }
 
-        for ($i = 0; $i < 16; $i++) {
+        for ($i = 0; $i < 16; ++$i) {
             $randChars .= $encodingChars[static::$lastRandChars[$i]];
         }
 
@@ -92,6 +92,6 @@ class Ulid
 
     public function __toString(): string
     {
-        return ($value = $this->time . $this->randomness) && $this->lowercase ? \strtolower($value) : \strtoupper($value);
+        return ($value = $this->time.$this->randomness) && $this->lowercase ? \strtolower($value) : \strtoupper($value);
     }
 }
