@@ -4,6 +4,7 @@ A PHP port of [alizain/ulid](https://github.com/alizain/ulid) with some minor im
 
 [![Latest Stable Version](https://poser.pugx.org/robinvdvleuten/ulid/v/stable)](https://packagist.org/packages/robinvdvleuten/ulid)
 [![Build Status](https://travis-ci.org/robinvdvleuten/php-ulid.svg?branch=master)](https://travis-ci.org/robinvdvleuten/php-ulid)
+[![Coverage Status](https://coveralls.io/repos/github/robinvdvleuten/php-ulid/badge.svg?branch=master)](https://coveralls.io/github/robinvdvleuten/php-ulid?branch=master)
 
 ## Installation
 
