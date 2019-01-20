@@ -50,13 +50,15 @@ class Ulid
 
     public static function fromString(string $value, bool $lowercase = false): self
     {
-        return new static(\substr($value, 0, 10), \substr($value, 10), $lowercase);
+        return new static(substr($value, 0, 10), substr($value, 10), $lowercase);
     }
 
     public static function generate(bool $lowercase = false): self
     {
-        $now = \intval(\microtime(true) * 1000);
+        $now = intval(microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
+
+        static::$lastGenTime = $now;
 
         $timeChars = '';
         $randChars = '';
@@ -71,7 +73,7 @@ class Ulid
 
         if (!$duplicateTime) {
             for ($i = 0; $i < 16; $i++) {
-                static::$lastRandChars[$i] = \random_int(0, 31);
+                static::$lastRandChars[$i] = random_int(0, 31);
             }
         } else {
             // If the timestamp hasn't changed since last push,
@@ -90,8 +92,23 @@ class Ulid
         return new static($timeChars, $randChars, $lowercase);
     }
 
+    public function getTime(): string
+    {
+        return $this->time;
+    }
+
+    public function getRandomness(): string
+    {
+        return $this->randomness;
+    }
+
+    public function isLowercase(): bool
+    {
+        return $this->lowercase;
+    }
+
     public function __toString(): string
     {
-        return ($value = $this->time . $this->randomness) && $this->lowercase ? \strtolower($value) : \strtoupper($value);
+        return ($value = $this->time . $this->randomness) && $this->lowercase ? strtolower($value) : strtoupper($value);
     }
 }

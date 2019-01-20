@@ -18,29 +18,46 @@ final class UlidTest extends TestCase
 {
     public function testGeneratesUppercaseIdentiferByDefault(): void
     {
-        $this->assertRegExp('/[0-9][A-Z]/', (string) Ulid::generate());
+        $ulid = Ulid::generate();
+
+        $this->assertRegExp('/[0-9][A-Z]/', (string) $ulid);
+        $this->assertFalse($ulid->isLowercase());
     }
 
     public function testGeneratesLowercaseIdentiferWhenConfigured(): void
     {
-        $this->assertRegExp('/[0-9][a-z]/', (string) Ulid::generate(true));
+        $ulid = Ulid::generate(true);
+
+        $this->assertRegExp('/[0-9][a-z]/', (string) $ulid);
+        $this->assertTrue($ulid->isLowercase());
     }
 
     public function testGeneratesTwentySixChars(): void
     {
-        $this->assertSame(26, \strlen(Ulid::generate()));
+        $this->assertSame(26, strlen(Ulid::generate()));
+    }
+
+    public function testAddsRandomnessWhenGeneratedMultipleTimes(): void
+    {
+        $a = Ulid::generate();
+        $b = Ulid::generate();
+
+        $this->assertEquals($a->getTime(), $b->getTime());
+        // Only the last character should be different.
+        $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
+        $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
     }
 
     public function testGeneratesLexographicallySortableUlids(): void
     {
         $a = Ulid::generate();
 
-        \sleep(1);
+        sleep(1);
 
         $b = Ulid::generate();
 
         $ulids = [(string) $b, (string) $a];
-        \usort($ulids, 'strcmp');
+        usort($ulids, 'strcmp');
 
         $this->assertSame([(string) $a, (string) $b], $ulids);
     }
