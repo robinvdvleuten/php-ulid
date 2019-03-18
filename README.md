@@ -1,13 +1,13 @@
 # Universally Unique Lexicographically Sortable Identifier
 
-A PHP port of [alizain/ulid](https://github.com/alizain/ulid) with some minor improvements.
+A PHP port of [ulid/javascript](https://github.com/ulid/javascript) with some minor improvements.
 
 [![Latest Stable Version](https://poser.pugx.org/robinvdvleuten/ulid/v/stable)](https://packagist.org/packages/robinvdvleuten/ulid)
 [![Build Status](https://travis-ci.org/robinvdvleuten/php-ulid.svg?branch=master)](https://travis-ci.org/robinvdvleuten/php-ulid)
 
 ## Installation
 
-The recommended way to install the library is through [Composer](http://getcomposer.org).
+The recommended way to install the library is through [Composer](https://getcomposer.org).
 
 ```bash
 composer require robinvdvleuten/ulid
