@@ -32,5 +32,8 @@
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
+    },
+    "suggest": {
+        "bentools/doctrine-ulid": "Use ULID with Doctrine ORM"
     }
 }

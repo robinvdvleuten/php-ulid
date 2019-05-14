@@ -26,6 +26,10 @@ $ulid = Ulid::generate(true);
 print $ulid; // 01b8kyr6g8bc61ce8r6k2t16hy
 ```
 
+## See also
+
+- [bentools/doctrine-ulid](https://github.com/bpolaszek/doctrine-ulid) - To use this library with Doctrine ORM.
+
 ## License
 
 MIT © [Robin van der Vleuten](https://www.robinvdvleuten.nl)
