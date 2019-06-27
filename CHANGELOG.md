@@ -2,7 +2,7 @@
 
 All notable changes to `ulid` will be documented in this file
 
-## v4.0.0 - [TO BE RELEASED]
+## v4.0.0 - 2019-06-27
 
 - ULID instance can be converted to timestamp: e858e3e0888c8b26f7282edf5956441846f780de
 - Throw exception when ULID string is invalid: 8018f5fe08699e1003c625d39a0fbac5060a0f33
