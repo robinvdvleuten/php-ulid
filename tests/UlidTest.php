@@ -66,4 +66,22 @@ final class UlidTest extends TestCase
     {
         $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3'));
     }
+
+    /**
+     * @expectedException \Ulid\Exception\InvalidUlidStringException
+     * @expectedExceptionMessage Invalid ULID string:
+     */
+    public function testCreatesFromStringWithInvalidUlid(): void
+    {
+        Ulid::fromString('not-a-valid-ulid');
+    }
+
+    /**
+     * @expectedException \Ulid\Exception\InvalidUlidStringException
+     * @expectedExceptionMessage Invalid ULID string:
+     */
+    public function testCreatesFromStringWithTrailingNewLine(): void
+    {
+        Ulid::fromString("01AN4Z07BY79KA1307SR9X4MV3\n");
+    }
 }

@@ -11,10 +11,15 @@
 
 namespace Ulid;
 
+use Ulid\Exception\InvalidUlidStringException;
+
 class Ulid
 {
     public const ENCODING_CHARS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
     public const ENCODING_LENGTH = 32;
+
+    public const TIME_LENGTH = 10;
+    public const RANDOM_LENGTH = 16;
 
     /**
      * @var int
@@ -50,7 +55,11 @@ class Ulid
 
     public static function fromString(string $value, bool $lowercase = false): self
     {
-        return new static(substr($value, 0, 10), substr($value, 10), $lowercase);
+        if (strlen($value) !== static::TIME_LENGTH + static::RANDOM_LENGTH) {
+            throw new InvalidUlidStringException('Invalid ULID string: ' . $value);
+        }
+
+        return new static(substr($value, 0, static::TIME_LENGTH), substr($value, static::TIME_LENGTH, static::RANDOM_LENGTH), $lowercase);
     }
 
     public static function generate(bool $lowercase = false): self
