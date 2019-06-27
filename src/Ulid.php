@@ -18,7 +18,9 @@ class Ulid
     public const ENCODING_CHARS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
     public const ENCODING_LENGTH = 32;
 
+    public const TIME_MAX = 281474976710655;
     public const TIME_LENGTH = 10;
+
     public const RANDOM_LENGTH = 16;
 
     /**
@@ -64,7 +66,7 @@ class Ulid
 
     public static function generate(bool $lowercase = false): self
     {
-        $now = (int) microtime(true) * 1000;
+        $now = (int) microtime(true);
         $duplicateTime = $now === static::$lastGenTime;
 
         static::$lastGenTime = $now;
@@ -116,8 +118,33 @@ class Ulid
         return $this->lowercase;
     }
 
+    public function toTimestamp(): int
+    {
+        return $this->decodeTime($this->time);
+    }
+
     public function __toString(): string
     {
         return ($value = $this->time . $this->randomness) && $this->lowercase ? strtolower($value) : strtoupper($value);
+    }
+
+    private function decodeTime(string $time): int
+    {
+        $timeChars = str_split(strrev($time));
+        $carry = 0;
+
+        foreach ($timeChars as $index => $char) {
+            if (($encodingIndex = strrpos(static::ENCODING_CHARS, $char)) === false) {
+                throw new InvalidUlidStringException('Invalid ULID character: ' . $char);
+            }
+
+            $carry += ($encodingIndex * pow(static::ENCODING_LENGTH, $index));
+        }
+
+        if ($carry > static::TIME_MAX) {
+            throw new InvalidUlidStringException('Invalid ULID string: timestamp too large');
+        }
+
+        return $carry;
     }
 }
