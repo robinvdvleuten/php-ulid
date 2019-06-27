@@ -27,10 +27,5 @@
     "require-dev": {
         "phpunit/phpunit": "^7.5",
         "phpbench/phpbench": "^0.15"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
     }
 }
