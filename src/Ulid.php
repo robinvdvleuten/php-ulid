@@ -66,7 +66,7 @@ class Ulid
 
     public static function generate(bool $lowercase = false): self
     {
-        $now = (int) microtime(true);
+        $now = (int) (microtime(true) * 1000);
         $duplicateTime = $now === static::$lastGenTime;
 
         static::$lastGenTime = $now;
