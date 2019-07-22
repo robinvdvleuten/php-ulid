@@ -2,6 +2,10 @@
 
 All notable changes to `ulid` will be documented in this file
 
+## v4.0.1 - 2019-07-22
+
+- Use milliseconds intead of seconds when generating ULIDs: 28dfc9285affa01385c175bb7fb5289791980edb
+
 ## v4.0.0 - 2019-06-27
 
 - ULID instance can be converted to timestamp: e858e3e0888c8b26f7282edf5956441846f780de
