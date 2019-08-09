@@ -134,7 +134,7 @@ class Ulid
         $carry = 0;
 
         foreach ($timeChars as $index => $char) {
-            if (($encodingIndex = strrpos(static::ENCODING_CHARS, $char)) === false) {
+            if (($encodingIndex = strripos(static::ENCODING_CHARS, $char)) === false) {
                 throw new InvalidUlidStringException('Invalid ULID character: ' . $char);
             }
 
