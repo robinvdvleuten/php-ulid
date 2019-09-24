@@ -2,6 +2,10 @@
 
 All notable changes to `ulid` will be documented in this file
 
+## v4.0.2 - 2019-09-24
+
+- Use case-insensitive character lookup when decoding time: 637ca0822ce72cb108552450bb738828621703cd
+
 ## v4.0.1 - 2019-07-22
 
 - Use milliseconds intead of seconds when generating ULIDs: 28dfc9285affa01385c175bb7fb5289791980edb
