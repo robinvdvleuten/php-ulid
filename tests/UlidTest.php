@@ -16,7 +16,7 @@ use Ulid\Ulid;
 
 final class UlidTest extends TestCase
 {
-    public function testGeneratesUppercaseIdentiferByDefault(): void
+    public function testGeneratesUppercaseIdentifierByDefault(): void
     {
         $ulid = Ulid::generate();
 
@@ -24,7 +24,7 @@ final class UlidTest extends TestCase
         $this->assertFalse($ulid->isLowercase());
     }
 
-    public function testGeneratesLowercaseIdentiferWhenConfigured(): void
+    public function testGeneratesLowercaseIdentifierWhenConfigured(): void
     {
         $ulid = Ulid::generate(true);
 
@@ -62,9 +62,18 @@ final class UlidTest extends TestCase
         $this->assertSame([(string) $a, (string) $b], $ulids);
     }
 
-    public function testCreatesFromString(): void
+    public function testCreatesFromUppercaseString(): void
     {
         $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3'));
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3', false));
+        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3', true));
+    }
+
+    public function testCreatesFromLowercaseString(): void
+    {
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3'));
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', false));
+        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', true));
     }
 
     /**
