@@ -76,27 +76,27 @@ class Ulid
 
         $encodingChars = static::ENCODING_CHARS;
 
-        for ($i = 9; $i >= 0; $i--) {
+        for ($i = static::TIME_LENGTH - 1; $i >= 0; $i--) {
             $mod = $now % static::ENCODING_LENGTH;
             $timeChars = $encodingChars[$mod].$timeChars;
             $now = ($now - $mod) / static::ENCODING_LENGTH;
         }
 
         if (!$duplicateTime) {
-            for ($i = 0; $i < 16; $i++) {
+            for ($i = 0; $i < static::RANDOM_LENGTH; $i++) {
                 static::$lastRandChars[$i] = random_int(0, 31);
             }
         } else {
             // If the timestamp hasn't changed since last push,
             // use the same random number, except incremented by 1.
-            for ($i = 15; $i >= 0 && static::$lastRandChars[$i] === 31; $i--) {
+            for ($i = static::RANDOM_LENGTH - 1; $i >= 0 && static::$lastRandChars[$i] === 31; $i--) {
                 static::$lastRandChars[$i] = 0;
             }
 
             static::$lastRandChars[$i]++;
         }
 
-        for ($i = 0; $i < 16; $i++) {
+        for ($i = 0; $i < static::RANDOM_LENGTH; $i++) {
             $randChars .= $encodingChars[static::$lastRandChars[$i]];
         }
 
