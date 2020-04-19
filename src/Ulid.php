@@ -58,7 +58,14 @@ class Ulid
     public static function fromString(string $value, bool $lowercase = false): self
     {
         if (strlen($value) !== static::TIME_LENGTH + static::RANDOM_LENGTH) {
-            throw new InvalidUlidStringException('Invalid ULID string: ' . $value);
+            throw new InvalidUlidStringException('Invalid ULID string (wrong length): ' . $value);
+        }
+
+        // Convert to uppercase for regex. Doesn't matter for output later, that is determined by $lowercase.
+        $value = strtoupper($value);
+
+        if (!preg_match(sprintf('!^[%s]{%d}$!', static::ENCODING_CHARS, static::TIME_LENGTH + static::RANDOM_LENGTH), $value)) {
+            throw new InvalidUlidStringException('Invalid ULID string (wrong characters): ' . $value);
         }
 
         return new static(substr($value, 0, static::TIME_LENGTH), substr($value, static::TIME_LENGTH, static::RANDOM_LENGTH), $lowercase);

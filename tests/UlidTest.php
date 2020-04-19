@@ -78,7 +78,7 @@ final class UlidTest extends TestCase
 
     /**
      * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string:
+     * @expectedExceptionMessage Invalid ULID string (wrong length):
      */
     public function testCreatesFromStringWithInvalidUlid(): void
     {
@@ -87,11 +87,31 @@ final class UlidTest extends TestCase
 
     /**
      * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string:
+     * @expectedExceptionMessage Invalid ULID string (wrong length):
      */
     public function testCreatesFromStringWithTrailingNewLine(): void
     {
         Ulid::fromString("01AN4Z07BY79KA1307SR9X4MV3\n");
+    }
+
+    public function invalidAlphabetDataProvider(): array
+    {
+        return [
+            'with i' => ['0001eh8yaep8cxp4amwchhdbhi'],
+            'with l' => ['0001eh8yaep8cxp4amwchhdbhl'],
+            'with o' => ['0001eh8yaep8cxp4amwchhdbho'],
+            'with u' => ['0001eh8yaep8cxp4amwchhdbhu'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidAlphabetDataProvider
+     * @expectedException \Ulid\Exception\InvalidUlidStringException
+     * @expectedExceptionMessage Invalid ULID string (wrong characters):
+     */
+    public function testCreatesFromStringWithInvalidAlphabet($ulid): void
+    {
+        Ulid::fromString($ulid);
     }
 
     public function testConvertsToTimestamp(): void
