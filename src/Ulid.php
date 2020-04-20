@@ -58,7 +58,14 @@ class Ulid
     public static function fromString(string $value, bool $lowercase = false): self
     {
         if (strlen($value) !== static::TIME_LENGTH + static::RANDOM_LENGTH) {
-            throw new InvalidUlidStringException('Invalid ULID string: ' . $value);
+            throw new InvalidUlidStringException('Invalid ULID string (wrong length): ' . $value);
+        }
+
+        // Convert to uppercase for regex. Doesn't matter for output later, that is determined by $lowercase.
+        $value = strtoupper($value);
+
+        if (!preg_match(sprintf('!^[%s]{%d}$!', static::ENCODING_CHARS, static::TIME_LENGTH + static::RANDOM_LENGTH), $value)) {
+            throw new InvalidUlidStringException('Invalid ULID string (wrong characters): ' . $value);
         }
 
         return new static(substr($value, 0, static::TIME_LENGTH), substr($value, static::TIME_LENGTH, static::RANDOM_LENGTH), $lowercase);
@@ -76,27 +83,27 @@ class Ulid
 
         $encodingChars = static::ENCODING_CHARS;
 
-        for ($i = 9; $i >= 0; $i--) {
+        for ($i = static::TIME_LENGTH - 1; $i >= 0; $i--) {
             $mod = $now % static::ENCODING_LENGTH;
             $timeChars = $encodingChars[$mod].$timeChars;
             $now = ($now - $mod) / static::ENCODING_LENGTH;
         }
 
         if (!$duplicateTime) {
-            for ($i = 0; $i < 16; $i++) {
+            for ($i = 0; $i < static::RANDOM_LENGTH; $i++) {
                 static::$lastRandChars[$i] = random_int(0, 31);
             }
         } else {
             // If the timestamp hasn't changed since last push,
             // use the same random number, except incremented by 1.
-            for ($i = 15; $i >= 0 && static::$lastRandChars[$i] === 31; $i--) {
+            for ($i = static::RANDOM_LENGTH - 1; $i >= 0 && static::$lastRandChars[$i] === 31; $i--) {
                 static::$lastRandChars[$i] = 0;
             }
 
             static::$lastRandChars[$i]++;
         }
 
-        for ($i = 0; $i < 16; $i++) {
+        for ($i = 0; $i < static::RANDOM_LENGTH; $i++) {
             $randChars .= $encodingChars[static::$lastRandChars[$i]];
         }
 

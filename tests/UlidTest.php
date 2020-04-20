@@ -16,7 +16,7 @@ use Ulid\Ulid;
 
 final class UlidTest extends TestCase
 {
-    public function testGeneratesUppercaseIdentiferByDefault(): void
+    public function testGeneratesUppercaseIdentifierByDefault(): void
     {
         $ulid = Ulid::generate();
 
@@ -24,7 +24,7 @@ final class UlidTest extends TestCase
         $this->assertFalse($ulid->isLowercase());
     }
 
-    public function testGeneratesLowercaseIdentiferWhenConfigured(): void
+    public function testGeneratesLowercaseIdentifierWhenConfigured(): void
     {
         $ulid = Ulid::generate(true);
 
@@ -62,14 +62,23 @@ final class UlidTest extends TestCase
         $this->assertSame([(string) $a, (string) $b], $ulids);
     }
 
-    public function testCreatesFromString(): void
+    public function testCreatesFromUppercaseString(): void
     {
         $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3'));
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3', false));
+        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3', true));
+    }
+
+    public function testCreatesFromLowercaseString(): void
+    {
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3'));
+        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', false));
+        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', true));
     }
 
     /**
      * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string:
+     * @expectedExceptionMessage Invalid ULID string (wrong length):
      */
     public function testCreatesFromStringWithInvalidUlid(): void
     {
@@ -78,11 +87,31 @@ final class UlidTest extends TestCase
 
     /**
      * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string:
+     * @expectedExceptionMessage Invalid ULID string (wrong length):
      */
     public function testCreatesFromStringWithTrailingNewLine(): void
     {
         Ulid::fromString("01AN4Z07BY79KA1307SR9X4MV3\n");
+    }
+
+    public function invalidAlphabetDataProvider(): array
+    {
+        return [
+            'with i' => ['0001eh8yaep8cxp4amwchhdbhi'],
+            'with l' => ['0001eh8yaep8cxp4amwchhdbhl'],
+            'with o' => ['0001eh8yaep8cxp4amwchhdbho'],
+            'with u' => ['0001eh8yaep8cxp4amwchhdbhu'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidAlphabetDataProvider
+     * @expectedException \Ulid\Exception\InvalidUlidStringException
+     * @expectedExceptionMessage Invalid ULID string (wrong characters):
+     */
+    public function testCreatesFromStringWithInvalidAlphabet($ulid): void
+    {
+        Ulid::fromString($ulid);
     }
 
     public function testConvertsToTimestamp(): void
