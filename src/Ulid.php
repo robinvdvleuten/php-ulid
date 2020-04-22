@@ -71,12 +71,31 @@ class Ulid
         return new static(substr($value, 0, static::TIME_LENGTH), substr($value, static::TIME_LENGTH, static::RANDOM_LENGTH), $lowercase);
     }
 
+    /**
+     * Create a ULID using the current time.
+     *
+     * @param bool $lowercase True to output lowercase ULIDs.
+     *
+     * @return Ulid Returns a ULID object for the current time.
+     */
     public static function generate(bool $lowercase = false): self
     {
-        $now = (int) (microtime(true) * 1000);
-        $duplicateTime = $now === static::$lastGenTime;
+        return static::generateWithTimestamp((int) (microtime(true) * 1000), $lowercase);
+    }
 
-        static::$lastGenTime = $now;
+    /**
+     * Create a ULID using the given time in microsecond.
+     *
+     * @param int $microseconds Number of microseconds since the UNIX epoch for which to generate this ULID.
+     * @param bool $lowercase True to output lowercase ULIDs.
+     *
+     * @return Ulid Returns a ULID object for the given microsecond time.
+     */
+    public static function generateWithTimestamp(int $microseconds, bool $lowercase = false): self
+    {
+        $duplicateTime = $microseconds === static::$lastGenTime;
+
+        static::$lastGenTime = $microseconds;
 
         $timeChars = '';
         $randChars = '';
@@ -84,9 +103,9 @@ class Ulid
         $encodingChars = static::ENCODING_CHARS;
 
         for ($i = static::TIME_LENGTH - 1; $i >= 0; $i--) {
-            $mod = $now % static::ENCODING_LENGTH;
+            $mod = $microseconds % static::ENCODING_LENGTH;
             $timeChars = $encodingChars[$mod].$timeChars;
-            $now = ($now - $mod) / static::ENCODING_LENGTH;
+            $microseconds = ($microseconds - $mod) / static::ENCODING_LENGTH;
         }
 
         if (!$duplicateTime) {
@@ -110,13 +129,27 @@ class Ulid
         return new static($timeChars, $randChars, $lowercase);
     }
 
+    /**
+     * @return string The base32-encoded time part of this ULID.
+     */
     public function getTime(): string
     {
+        if ($this->lowercase) {
+            return strtolower($this->time);
+        }
+
         return $this->time;
     }
 
+    /**
+     * @return string The base32-encoded random part of this ULID.
+     */
     public function getRandomness(): string
     {
+        if ($this->lowercase) {
+            return strtolower($this->randomness);
+        }
+
         return $this->randomness;
     }
 
@@ -125,6 +158,9 @@ class Ulid
         return $this->lowercase;
     }
 
+    /**
+     * @return int Return the number of microseconds since the UNIX epoch when this ULID was generated.
+     */
     public function toTimestamp(): int
     {
         return $this->decodeTime($this->time);
@@ -132,7 +168,15 @@ class Ulid
 
     public function __toString(): string
     {
-        return ($value = $this->time . $this->randomness) && $this->lowercase ? strtolower($value) : strtoupper($value);
+        $value = $this->time.$this->randomness;
+
+        if ($this->lowercase) {
+            return strtolower($value);
+        }
+
+        // Internally, all base32 encoded characters are uppercase.
+
+        return $value;
     }
 
     private function decodeTime(string $time): int

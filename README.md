@@ -9,7 +9,7 @@ A PHP port of [ulid/javascript](https://github.com/ulid/javascript) with some mi
 
 You can install the package via [Composer](https://getcomposer.org).
 
-```bash
+```sh
 composer require robinvdvleuten/ulid
 ```
 
@@ -25,14 +25,19 @@ echo (string) $ulid; // 01B8KYR6G8BC61CE8R6K2T16HY
 $ulid = Ulid::generate(true);
 echo (string) $ulid; // 01b8kyr6g8bc61ce8r6k2t16hy
 
-// If you need the timestamp from an ULID instance
+// You can also generate a ULID for a specific microtimestamp
+$ulid = Ulid::generateWithTimestamp(531405432123);
+// or with a lowercased output: $ulid = Ulid::generateWithTimestamp(531405432123, true);
+echo (string) $ulid; // 00FEX3PS9VWZW140PQ0EBWCKPN
+
+// If you need the timestamp (in microseconds) from an ULID instance
 $ulid = Ulid::generate();
-echo $ulid->toTimestamp(); // 1561622862
+echo $ulid->toTimestamp(); // 1587485542014
 ```
 
 ### Testing
 
-``` bash
+```sh
 composer test
 ```
 
