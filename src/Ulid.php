@@ -125,9 +125,9 @@ class Ulid
         return $this->lowercase;
     }
 
-    public function toTimestamp(): int
+    public function toTimestamp(): float
     {
-        return $this->decodeTime($this->time);
+        return $this->decodeTime($this->time)/1000;
     }
 
     public function __toString(): string

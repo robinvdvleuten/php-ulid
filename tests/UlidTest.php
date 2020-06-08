@@ -116,7 +116,7 @@ final class UlidTest extends TestCase
 
     public function testConvertsToTimestamp(): void
     {
-        $this->assertEquals(1561622862, Ulid::fromString('0001EH8YAEP8CXP4AMWCHHDBHJ')->toTimestamp());
-        $this->assertEquals(1561622862, Ulid::fromString('0001eh8yaep8cxp4amwchhdbhj', true)->toTimestamp());
+        $this->assertEquals(1591616647.074, Ulid::fromString('01EA9VXBX2HJYMFFDXC60RV7RZ')->toTimestamp());
+        $this->assertEquals(1591616647.074, Ulid::fromString('01ea9vxbx2hjymffdxc60rv7rz', true)->toTimestamp());
     }
 }
