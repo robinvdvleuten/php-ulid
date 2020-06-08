@@ -127,7 +127,7 @@ class Ulid
 
     public function toTimestamp(): float
     {
-        return $this->decodeTime($this->time)/1000;
+        return (float) $this->decodeTime($this->time)/1000;
     }
 
     public function __toString(): string

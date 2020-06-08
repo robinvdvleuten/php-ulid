@@ -119,4 +119,12 @@ final class UlidTest extends TestCase
         $this->assertEquals(1591616647.074, Ulid::fromString('01EA9VXBX2HJYMFFDXC60RV7RZ')->toTimestamp());
         $this->assertEquals(1591616647.074, Ulid::fromString('01ea9vxbx2hjymffdxc60rv7rz', true)->toTimestamp());
     }
+    
+    public function testIsFloatToTimestamp(): void
+    {
+        $this->assertIsFloat( Ulid::fromString('01EA9VXBX2HJYMFFDXC60RV7RZ')->toTimestamp());
+        $this->assertIsFloat( Ulid::fromString('01ea9vxbx2hjymffdxc60rv7rz', true)->toTimestamp());
+        $this->assertIsFloat( Ulid::generate(true)->toTimestamp());
+        $this->assertIsFloat( Ulid::generate()->toTimestamp());
+    }
 }
