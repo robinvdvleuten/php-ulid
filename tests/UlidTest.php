@@ -119,4 +119,26 @@ final class UlidTest extends TestCase
         $this->assertEquals(1561622862, Ulid::fromString('0001EH8YAEP8CXP4AMWCHHDBHJ')->toTimestamp());
         $this->assertEquals(1561622862, Ulid::fromString('0001eh8yaep8cxp4amwchhdbhj', true)->toTimestamp());
     }
+
+    public function testCreateFromTimestamp(): void
+    {
+        $milliseconds = 1593048767015;
+        $ulid = Ulid::fromTimestamp($milliseconds);
+
+        $this->assertSame('01EBMHP6H7', substr((string) $ulid, 0, 10));
+        $this->assertSame('01EBMHP6H7', $ulid->getTime());
+        $this->assertSame($milliseconds, $ulid->toTimestamp());
+    }
+
+    public function testAddsRandomnessWhenGeneratedMultipleTimesByFromTimestamp(): void
+    {
+        $milliseconds = 1593048767015;
+        $a = Ulid::fromTimestamp($milliseconds);
+        $b = Ulid::fromTimestamp($milliseconds);
+
+        $this->assertEquals($a->getTime(), $b->getTime());
+        // Only the last character should be different.
+        $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
+        $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
+    }
 }
