@@ -71,12 +71,17 @@ class Ulid
         return new static(substr($value, 0, static::TIME_LENGTH), substr($value, static::TIME_LENGTH, static::RANDOM_LENGTH), $lowercase);
     }
 
-    public static function generate(bool $lowercase = false): self
+    /**
+     * Create a ULID using the given timestamp.
+     * @param int $milliseconds Number of milliseconds since the UNIX epoch for which to generate this ULID.
+     * @param bool $lowercase True to output lowercase ULIDs.
+     * @return Ulid Returns a ULID object for the given microsecond time.
+     */
+    public static function fromTimestamp(int $milliseconds, bool $lowercase = false): self
     {
-        $now = (int) (microtime(true) * 1000);
-        $duplicateTime = $now === static::$lastGenTime;
+        $duplicateTime = $milliseconds === static::$lastGenTime;
 
-        static::$lastGenTime = $now;
+        static::$lastGenTime = $milliseconds;
 
         $timeChars = '';
         $randChars = '';
@@ -84,9 +89,9 @@ class Ulid
         $encodingChars = static::ENCODING_CHARS;
 
         for ($i = static::TIME_LENGTH - 1; $i >= 0; $i--) {
-            $mod = $now % static::ENCODING_LENGTH;
+            $mod = $milliseconds % static::ENCODING_LENGTH;
             $timeChars = $encodingChars[$mod].$timeChars;
-            $now = ($now - $mod) / static::ENCODING_LENGTH;
+            $milliseconds = ($milliseconds - $mod) / static::ENCODING_LENGTH;
         }
 
         if (!$duplicateTime) {
@@ -108,6 +113,12 @@ class Ulid
         }
 
         return new static($timeChars, $randChars, $lowercase);
+    }
+
+    public static function generate(bool $lowercase = false): self
+    {
+        $now = (int) (microtime(true) * 1000);
+        return static::fromTimestamp($now, $lowercase);
     }
 
     public function getTime(): string
