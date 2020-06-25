@@ -12,6 +12,7 @@
 namespace Ulid\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Ulid\Exception\InvalidUlidStringException;
 use Ulid\Ulid;
 
 /**
@@ -79,21 +80,19 @@ final class UlidTest extends TestCase
         $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', true));
     }
 
-    /**
-     * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string (wrong length):
-     */
     public function testCreatesFromStringWithInvalidUlid(): void
     {
+        $this->expectException(InvalidUlidStringException::class);
+        $this->expectExceptionMessage('Invalid ULID string (wrong length):');
+    
         Ulid::fromString('not-a-valid-ulid');
     }
 
-    /**
-     * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string (wrong length):
-     */
     public function testCreatesFromStringWithTrailingNewLine(): void
     {
+        $this->expectException(InvalidUlidStringException::class);
+        $this->expectExceptionMessage('Invalid ULID string (wrong length):');
+
         Ulid::fromString("01AN4Z07BY79KA1307SR9X4MV3\n");
     }
 
@@ -109,11 +108,12 @@ final class UlidTest extends TestCase
 
     /**
      * @dataProvider invalidAlphabetDataProvider
-     * @expectedException \Ulid\Exception\InvalidUlidStringException
-     * @expectedExceptionMessage Invalid ULID string (wrong characters):
      */
     public function testCreatesFromStringWithInvalidAlphabet($ulid): void
     {
+        $this->expectException(InvalidUlidStringException::class);
+        $this->expectExceptionMessage('Invalid ULID string (wrong characters):');
+
         Ulid::fromString($ulid);
     }
 
