@@ -118,6 +118,7 @@ class Ulid
     public static function generate(bool $lowercase = false): self
     {
         $now = (int) (microtime(true) * 1000);
+        
         return static::fromTimestamp($now, $lowercase);
     }
 

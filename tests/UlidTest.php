@@ -42,7 +42,7 @@ final class UlidTest extends TestCase
         $a = Ulid::generate();
         $b = Ulid::generate();
 
-        $this->assertEquals($a->getTime(), $b->getTime());
+        $this->assertEquals($a->toTimestamp(), $b->toTimestamp());
         // Only the last character should be different.
         $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
         $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
