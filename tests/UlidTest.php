@@ -14,6 +14,9 @@ namespace Ulid\Tests;
 use PHPUnit\Framework\TestCase;
 use Ulid\Ulid;
 
+/**
+ * @group time-sensitive
+ */
 final class UlidTest extends TestCase
 {
     public function testGeneratesUppercaseIdentifierByDefault(): void
