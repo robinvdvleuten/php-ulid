@@ -28,6 +28,11 @@ echo (string) $ulid; // 01b8kyr6g8bc61ce8r6k2t16hy
 // If you need the timestamp from an ULID instance
 $ulid = Ulid::generate();
 echo $ulid->toTimestamp(); // 1561622862
+
+// You can also generate a ULID for a specific UNIX-time in milliseconds
+$ulid = Ulid::fromTimestamp(1593048767015);
+// or with a lower cased output: $ulid = Ulid::fromTimestamp(1593048767015, true);
+echo (string) $ulid; // 01EBMHP6H7TT1Q4B7CA018K5MQ
 ```
 
 ### Testing
