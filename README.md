@@ -1,7 +1,7 @@
 # Universally Unique Lexicographically Sortable Identifier
 
 [![Latest Stable Version](https://poser.pugx.org/robinvdvleuten/ulid/v/stable)](https://packagist.org/packages/robinvdvleuten/ulid)
-[![Build Status](https://travis-ci.org/robinvdvleuten/php-ulid.svg?branch=master)](https://travis-ci.org/robinvdvleuten/php-ulid)
+[![Build Status](https://img.shields.io/github/workflow/status/robinvdvleuten/php-ulid/run-tests.svg?style=flat-square)](https://github.com/robinvdvleuten/php-ulid/actions?query=workflow%3Arun-tests)
 
 A PHP port of [ulid/javascript](https://github.com/ulid/javascript) with some minor improvements.
 
