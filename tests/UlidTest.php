@@ -24,7 +24,7 @@ final class UlidTest extends TestCase
     {
         $ulid = Ulid::generate();
 
-        $this->assertRegExp('/[0-9][A-Z]/', (string) $ulid);
+        $this->assertMatchesRegularExpression('/[0-9][A-Z]/', (string) $ulid);
         $this->assertFalse($ulid->isLowercase());
     }
 
@@ -32,7 +32,7 @@ final class UlidTest extends TestCase
     {
         $ulid = Ulid::generate(true);
 
-        $this->assertRegExp('/[0-9][a-z]/', (string) $ulid);
+        $this->assertMatchesRegularExpression('/[0-9][a-z]/', (string) $ulid);
         $this->assertTrue($ulid->isLowercase());
     }
 
