@@ -22,11 +22,11 @@
         }
     },
     "require": {
-        "php": "^7.1"
+        "php": "^7.1|^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
-        "phpbench/phpbench": "^0.17",
+        "phpbench/phpbench": "^1.0.0-alpha3",
         "symfony/phpunit-bridge": "^5.1"
     }
 }
