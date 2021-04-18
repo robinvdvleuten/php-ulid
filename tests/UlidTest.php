@@ -11,21 +11,32 @@
 
 namespace Ulid\Tests;
 
+use Ulid\Ulid;
 use PHPUnit\Framework\TestCase;
 use Ulid\Exception\InvalidUlidStringException;
-use Ulid\Ulid;
 
 /**
  * @group time-sensitive
  */
 final class UlidTest extends TestCase
 {
+    const VALID_MILLISECONDS = 1618715546965;
+    const INVALID_MILLISECONDS = 1000000000000000;
+    const VALID_UPPER_ULID = '01F3HFE5ANK3KSG1BKVE66AEYM';
+    const VALID_LOWER_ULID = '01f3hfe5ank3ksg1bkve66aeym';
+
+    protected function setup(): void
+    {
+        $this->ulidFromGenerate = Ulid::generate();
+        $this->ulidFromTimestamp = Ulid::fromTimestamp(
+            self::VALID_MILLISECONDS
+        );
+    }
+
     public function testGeneratesUppercaseIdentifierByDefault(): void
     {
-        $ulid = Ulid::generate();
-
-        $this->assertRegExp('/[0-9][A-Z]/', (string) $ulid);
-        $this->assertFalse($ulid->isLowercase());
+        $this->assertRegExp('/[0-9][A-Z]/', (string) $this->ulidFromGenerate);
+        $this->assertFalse($this->ulidFromGenerate->isLowercase());
     }
 
     public function testGeneratesLowercaseIdentifierWhenConfigured(): void
@@ -38,7 +49,7 @@ final class UlidTest extends TestCase
 
     public function testGeneratesTwentySixChars(): void
     {
-        $this->assertSame(26, strlen(Ulid::generate()));
+        $this->assertSame(26, strlen($this->ulidFromGenerate));
     }
 
     public function testAddsRandomnessWhenGeneratedMultipleTimes(): void
@@ -46,10 +57,10 @@ final class UlidTest extends TestCase
         $a = Ulid::generate();
         $b = Ulid::generate();
 
-        $this->assertEquals($a->toTimestamp(), $b->toTimestamp());
+        $this->assertSame($a->toTimestamp(), $b->toTimestamp());
         // Only the last character should be different.
-        $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
-        $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
+        $this->assertSame(substr($a, 0, -1), substr($b, 0, -1));
+        $this->assertNotSame($a->getRandomness(), $b->getRandomness());
     }
 
     public function testGeneratesLexographicallySortableUlids(): void
@@ -68,23 +79,47 @@ final class UlidTest extends TestCase
 
     public function testCreatesFromUppercaseString(): void
     {
-        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3'));
-        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3', false));
-        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01AN4Z07BY79KA1307SR9X4MV3', true));
+        $this->assertSame(
+            self::VALID_UPPER_ULID,
+            (string) Ulid::fromString(self::VALID_UPPER_ULID)
+        );
+
+        $this->assertSame(
+            self::VALID_UPPER_ULID,
+            (string) Ulid::fromString(self::VALID_UPPER_ULID, false)
+        );
+
+        $this->assertSame(
+            self::VALID_LOWER_ULID,
+            (string) Ulid::fromString(self::VALID_UPPER_ULID, true)
+        );
+
     }
 
     public function testCreatesFromLowercaseString(): void
     {
-        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3'));
-        $this->assertEquals('01AN4Z07BY79KA1307SR9X4MV3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', false));
-        $this->assertEquals('01an4z07by79ka1307sr9x4mv3', (string) Ulid::fromString('01an4z07by79ka1307sr9x4mv3', true));
+        $this->assertSame(
+            self::VALID_UPPER_ULID,
+            (string) Ulid::fromString(self::VALID_LOWER_ULID)
+        );
+
+        $this->assertSame(
+            self::VALID_UPPER_ULID,
+            (string) Ulid::fromString(self::VALID_LOWER_ULID, false)
+        );
+
+        $this->assertSame(
+            self::VALID_LOWER_ULID,
+            (string) Ulid::fromString(self::VALID_LOWER_ULID, true)
+        );
+
     }
 
     public function testCreatesFromStringWithInvalidUlid(): void
     {
         $this->expectException(InvalidUlidStringException::class);
         $this->expectExceptionMessage('Invalid ULID string (wrong length):');
-    
+
         Ulid::fromString('not-a-valid-ulid');
     }
 
@@ -93,64 +128,86 @@ final class UlidTest extends TestCase
         $this->expectException(InvalidUlidStringException::class);
         $this->expectExceptionMessage('Invalid ULID string (wrong length):');
 
-        Ulid::fromString("01AN4Z07BY79KA1307SR9X4MV3\n");
+        Ulid::fromString(self::VALID_UPPER_ULID . "\n");
     }
 
     public function invalidAlphabetDataProvider(): array
     {
         return [
-            'with i' => ['0001eh8yaep8cxp4amwchhdbhi'],
-            'with l' => ['0001eh8yaep8cxp4amwchhdbhl'],
-            'with o' => ['0001eh8yaep8cxp4amwchhdbho'],
-            'with u' => ['0001eh8yaep8cxp4amwchhdbhu'],
+            'with i' => ['0001eh8yaep8cxp4amwchhdbhi', false],
+            'with l' => ['0001eh8yaep8cxp4amwchhdbhl', false],
+            'with o' => ['0001eh8yaep8cxp4amwchhdbho', false],
+            'with u' => ['0001eh8yaep8cxp4amwchhdbhu', false],
+            'with I' => ['0001EH8YAEP8CXP4AMWCHHDBHI', true],
+            'with L' => ['0001EH8YAEP8CXP4AMWCHHDBHL', true],
+            'with O' => ['0001EH8YAEP8CXP4AMWCHHDBHO', true],
+            'with U' => ['0001EH8YAEP8CXP4AMWCHHDBHU', true],
         ];
     }
 
     /**
      * @dataProvider invalidAlphabetDataProvider
      */
-    public function testCreatesFromStringWithInvalidAlphabet($ulid): void
+    public function testCreatesFromStringWithInvalidAlphabet($ulid, $stringCase): void
     {
         $this->expectException(InvalidUlidStringException::class);
-        $this->expectExceptionMessage('Invalid ULID string (wrong characters):');
+        $this->expectExceptionMessage(
+            'Invalid ULID string (wrong characters):'
+        );
 
-        Ulid::fromString($ulid);
+        Ulid::fromString($ulid, $stringCase);
     }
 
     public function testConvertsToTimestamp(): void
     {
-        $this->assertEquals(1561622862, Ulid::fromString('0001EH8YAEP8CXP4AMWCHHDBHJ')->toTimestamp());
-        $this->assertEquals(1561622862, Ulid::fromString('0001eh8yaep8cxp4amwchhdbhj', true)->toTimestamp());
+        $this->assertEquals(
+            self::VALID_MILLISECONDS,
+            Ulid::fromString(self::VALID_UPPER_ULID)->toTimestamp()
+        );
+
+        $this->assertEquals(
+            self::VALID_MILLISECONDS,
+            Ulid::fromString(self::VALID_LOWER_ULID, true)->toTimestamp()
+        );
     }
 
     public function testCreateFromTimestamp(): void
     {
-        $milliseconds = 1593048767015;
-        $ulid = Ulid::fromTimestamp($milliseconds);
+        $this->assertSame(
+            substr(self::VALID_UPPER_ULID, 0, 10),
+            substr((string) $this->ulidFromTimestamp, 0, 10)
+        );
 
-        $this->assertSame('01EBMHP6H7', substr((string) $ulid, 0, 10));
-        $this->assertSame('01EBMHP6H7', $ulid->getTime());
-        $this->assertSame($milliseconds, $ulid->toTimestamp());
+        $this->assertSame(
+            substr((string) $this->ulidFromTimestamp, 0, 10),
+            $this->ulidFromTimestamp->getTime()
+        );
+
+        $this->assertSame(
+            self::VALID_MILLISECONDS,
+            $this->ulidFromTimestamp->toTimestamp()
+        );
     }
 
-    public function testAddsRandomnessWhenGeneratedMultipleTimesByFromTimestamp(): void
+    public function testAddsRandomnessWhenGeneratedMultipleTimesFromSameTimestamp(): void
     {
-        $milliseconds = 1593048767015;
-        $a = Ulid::fromTimestamp($milliseconds);
-        $b = Ulid::fromTimestamp($milliseconds);
+        $a = Ulid::fromTimestamp(self::VALID_MILLISECONDS);
+        $b = Ulid::fromTimestamp(self::VALID_MILLISECONDS);
 
-        $this->assertEquals($a->getTime(), $b->getTime());
+        $this->assertSame($a->getTime(), $b->getTime());
         // Only the last character should be different.
-        $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
-        $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
+        $this->assertSame(substr($a, 0, -1), substr($b, 0, -1));
+        $this->assertNotSame($a->getRandomness(), $b->getRandomness());
     }
-    
+
     public function testCreatesFromTimestampWithInvalidMilliseconds(): void
     {
         $this->expectException(InvalidUlidStringException::class);
-        $this->expectExceptionMessage('Invalid ULID string: timestamp too large');
+        $this->expectExceptionMessage(
+            'Invalid ULID string: timestamp too large'
+        );
 
-        $ulid = Ulid::fromTimestamp(1000000000000000);
+        $ulid = Ulid::fromTimestamp(self::INVALID_MILLISECONDS);
         $ulid->toTimestamp();
     }
 }
