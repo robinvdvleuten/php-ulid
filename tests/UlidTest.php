@@ -144,4 +144,13 @@ final class UlidTest extends TestCase
         $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
         $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
     }
+    
+    public function testCreatesFromTimestampWithInvalidMilliseconds(): void
+    {
+        $this->expectException(InvalidUlidStringException::class);
+        $this->expectExceptionMessage('Invalid ULID string: timestamp too large');
+
+        $ulid = Ulid::fromTimestamp(1000000000000000);
+        $ulid->toTimestamp();
+    }
 }
