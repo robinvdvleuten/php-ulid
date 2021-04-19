@@ -58,8 +58,16 @@ final class UlidTest extends TestCase
         $b = Ulid::generate();
 
         $this->assertSame($a->toTimestamp(), $b->toTimestamp());
-        // Only the last character should be different.
-        $this->assertSame(substr($a, 0, -1), substr($b, 0, -1));
+        
+        /*
+         * The `Only the last character should be different.` afirmation is wrong
+         * If generated ulid ends with `YZZ` for instance,
+         * the next would end with `Z00` so all three characters would be different
+         * and because trying to assert all characters except last are the same,
+         * is breaking the tests sometimes
+         */
+        // $this->assertSame(substr($a, 0, -1), substr($b, 0, -1));
+        
         $this->assertNotSame($a->getRandomness(), $b->getRandomness());
     }
 
@@ -195,8 +203,16 @@ final class UlidTest extends TestCase
         $b = Ulid::fromTimestamp(self::VALID_MILLISECONDS);
 
         $this->assertSame($a->getTime(), $b->getTime());
-        // Only the last character should be different.
-        $this->assertSame(substr($a, 0, -1), substr($b, 0, -1));
+
+        /*
+         * The `Only the last character should be different.` afirmation is wrong
+         * If generated ulid ends with `YZZ` for instance,
+         * the next would end with `Z00` so all three characters would be different
+         * and because trying to assert all characters except last are the same,
+         * is breaking the tests sometimes
+         */
+        // $this->assertSame(substr($a, 0, -1), substr($b, 0, -1));
+
         $this->assertNotSame($a->getRandomness(), $b->getRandomness());
     }
 
