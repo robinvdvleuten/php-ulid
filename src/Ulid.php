@@ -11,9 +11,10 @@
 
 namespace Ulid;
 
+use JsonSerializable;
 use Ulid\Exception\InvalidUlidStringException;
 
-class Ulid
+class Ulid implements JsonSerializable
 {
     public const ENCODING_CHARS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
     public const ENCODING_LENGTH = 32;
@@ -165,5 +166,13 @@ class Ulid
         }
 
         return $carry;
+    }
+
+    /**
+     * @return string
+     */
+    public function jsonSerialize(): string
+    {
+        return $this->__toString();
     }
 }
