@@ -166,4 +166,13 @@ class Ulid
 
         return $carry;
     }
+
+    public static function isValid(String $ulid)
+    {
+        if (strlen($ulid) !== static::TIME_LENGTH + static::RANDOM_LENGTH) {
+            return false;
+        }
+
+        return !preg_match('/[^abcdefghjkmnpqrstvwxyz0-9]/i', $ulid);
+    }
 }

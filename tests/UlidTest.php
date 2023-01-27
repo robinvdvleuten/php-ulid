@@ -144,4 +144,20 @@ final class UlidTest extends TestCase
         $this->assertEquals(substr($a, 0, -1), substr($b, 0, -1));
         $this->assertNotEquals($a->getRandomness(), $b->getRandomness());
     }
+
+    public function testValidateUlid(): void
+    {
+        //contain invalidate letter i at the end
+        $res = Ulid::isValid('01b8kyr6g8bc61ce8r6k2t16hi');
+        $res2 = Ulid::isValid('01b8kyr6g8bc61ce8r6k2t16hy');
+        $res3 = Ulid::isValid('00000000000000000000longerthan26');
+        $res4 = Ulid::isValid(Ulid::generate());
+        $res5 = Ulid::isValid(Ulid::generate(true));
+
+        $this->assertFalse($res);
+        $this->assertTrue($res2);
+        $this->assertFalse($res3);
+        $this->assertTrue($res4);
+        $this->assertTrue($res5);
+    }
 }
